@@ -56,3 +56,21 @@ MATCH (p:Person)
 WHERE size((p)--()) > average
 RETURN p
 
+
+// PEOPLE WITH K NUMBER OF FRIENDS
+
+WITH 10 AS K
+MATCH (p:Person)
+WHERE size((p)--()) = K
+RETURN p.id
+
+
+// GIVEN K PEOPLE, CHECK IF A PERSON WHO IS MUTUAL FRIENDS WITH ALL OF THEM, EXISTS
+
+WITH '10' AS f1, '1' AS f2
+MATCH (p:Person)-[:IS_FRIENDS_WITH]-(c:Person{id:f1})
+MATCH (p)-[:IS_FRIENDS_WITH]-(d:Person{id:f2})
+RETURN p.id
+
+
+
