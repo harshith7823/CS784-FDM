@@ -65,9 +65,9 @@ if __name__ == "__main__":
             file = open(directory+filename, 'r')
             for line in file.readlines():
                 line = line.split()
-                circle_name = line[0]+"_"+filename[:len(filename)-8]
-                # print(circle_name)
+                circle_name = line[0]+"_"+filename[:len(filename)-8]                
                 app.create_circle(circle_name)
+                app.add_node_to_circle(circle_name, person_id=filename[:len(filename)-8]) 
                 for person_id in line[1:]:
                     app.add_node_to_circle(circle_name, person_id)                
     app.close()
