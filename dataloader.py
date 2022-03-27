@@ -37,7 +37,7 @@ def createTables():
         cur.execute(
             "CREATE TABLE IF NOT EXISTS edges (source integer, destination integer);")
         cur.execute(
-            "CREATE TABLE IF NOT EXISTS circles (source integer, circle_number integer, member integer);")
+            "CREATE TABLE IF NOT EXISTS circles (circle_info varchar, member integer);")
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
 
@@ -66,7 +66,7 @@ def loadCircleData():
             circleFiles.append(os.path.join(
                 "/users/pramod1/dev/facebook", file))
     cur = conn.cursor()
-    insertQuery = "INSERT INTO circles(source, circle_number, member) VALUES (%s, %s, %s)"
+    insertQuery = "INSERT INTO circles(circle_info, member) VALUES (%s, %s)"
     try:
         for fileName in circleFiles:
             source = os.path.basename(fileName)
@@ -75,9 +75,9 @@ def loadCircleData():
                 lines = file.readlines()
                 for line in lines:
                     entries = line.split('\t')
-                    circleNumber = entries[0].replace("circle",'')
+                    circleInfo=entries[0]+"_" + source
                     for i in range(1,len(entries)):
-                        data = (int(source), int(circleNumber), int(entries[i]))
+                        data = (circleInfo, int(entries[i]))
                         cur.execute(insertQuery, data)
                         conn.commit()
         cur.close()
@@ -88,7 +88,7 @@ def loadCircleData():
 if __name__ == '__main__':
     connect()
     createTables()
-    # loadEdgeData()
+    #loadEdgeData()
     loadCircleData()
     if conn is not None:
         conn.close()
