@@ -55,9 +55,9 @@ class App:
 
 if __name__ == "__main__":
     # Aura queries use an encrypted connection using the "neo4j+s" URI scheme
-    uri = "neo4j+s://3cc782b6.databases.neo4j.io"
+    uri = "neo4j://localhost:7687"
     user = "neo4j"
-    password = "9-2lE7ssrtt09vCiRWoV8IH2F_RyiFlV7zSIEF5eiR0"
+    password = "paraschous"
     app = App(uri, user, password)
     directory = "../facebook/"
     for filename in os.listdir(directory):        
