@@ -11,6 +11,24 @@ class App:
     def close(self):        
         self.driver.close()
 
+    def delete_nodes(self):
+        with self.driver.session() as session:
+            result = session.write_transaction(self._delete_nodes)
+            print("Deleted nodes :", result)                
+
+    @staticmethod
+    def _delete_nodes(tx):
+        query = (
+            "MATCH (n:Person) DETACH DELETE n"            
+        )
+        result = tx.run(query)
+        try:
+            return result
+        except ServiceUnavailable as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+
     def create_connection(self, src, dest):
         with self.driver.session() as session:
             result = session.write_transaction(self._create_connection, src, dest)            
@@ -39,14 +57,11 @@ if __name__ == "__main__":
     uri = "neo4j://localhost:7687"
     user = "neo4j"
     password = "paraschous"
-    app = App(uri, user, password)       
+    app = App(uri, user, password)     
+    app.delete_nodes()    
     file = open('../twitter_combined.csv', 'r')
     for line in file.readlines():
+        line = line.strip()
         line = line.split(" ")  
         app.create_connection(line[0], line[1])
     app.close()
-
-
-
-
-    
