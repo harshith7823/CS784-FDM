@@ -5,7 +5,7 @@ import os
 conn = None
 
 
-def connect():
+def connect(dbname):
     """ Connect to the PostgreSQL database server """
     global conn
     try:
@@ -13,7 +13,7 @@ def connect():
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect("dbname=facebook user=pramod1")
+        conn = psycopg2.connect("dbname="+dbname +" user=akul")
 
         # create a cursor
         cur = conn.cursor()
@@ -44,11 +44,11 @@ def createTables():
     conn.commit()  # <--- makes sure the change is shown in the database
 
 
-def loadEdgeData():
+def loadEdgeData(path):
     cur = conn.cursor()
     insertQuery = "INSERT INTO edges(source, destination) VALUES (%s, %s)"
     try:
-        with open('facebook_combined.txt', 'r') as file:
+        with open(path, 'r') as file:
             reader = csv.reader(file, delimiter=' ')
             for src, dest in reader:
                 data = (int(src), int(dest))
@@ -59,12 +59,12 @@ def loadEdgeData():
         print(error)
 
 
-def loadCircleData():
+def loadCircleData(path):
     circleFiles = []
-    for file in os.listdir("/users/pramod1/dev/facebook"):
+    for file in os.listdir(path):
         if file.endswith(".circles"):
             circleFiles.append(os.path.join(
-                "/users/pramod1/dev/facebook", file))
+                path, file))
     cur = conn.cursor()
     insertQuery = "INSERT INTO circles(circle_info, member) VALUES (%s, %s)"
     try:
@@ -86,10 +86,15 @@ def loadCircleData():
 
 
 if __name__ == '__main__':
-    connect()
+    #connect("facebook")
+    # createTables()
+    # loadEdgeData("/users/akul/facebook_combined.txt")
+    # loadCircleData("/users/akul/facebook/")
+
+    connect("twitter")
     createTables()
-    #loadEdgeData()
-    loadCircleData()
+    loadEdgeData("/users/akul/twitter_combined.txt")
+    loadCircleData("/users/akul/twitter/")
     if conn is not None:
         conn.close()
         print('Database connection closed.')
