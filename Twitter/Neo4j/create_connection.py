@@ -58,7 +58,7 @@ if __name__ == "__main__":
     user = "neo4j"
     password = "paraschous"
     app = App(uri, user, password)     
-    app.delete_nodes()    
+    #app.delete_nodes()    
     file = open('../twitter_combined.csv', 'r')
     for line in file.readlines():
         line = line.strip()
