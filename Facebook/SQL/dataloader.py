@@ -45,6 +45,7 @@ def createTables():
 
 
 def loadEdgeData(path):
+    m = set()
     cur = conn.cursor()
     insertQuery = "INSERT INTO edges(source, destination) VALUES (%s, %s)"
     try:
@@ -52,8 +53,10 @@ def loadEdgeData(path):
             reader = csv.reader(file, delimiter=' ')
             for src, dest in reader:
                 data = (int(src), int(dest))
-                cur.execute(insertQuery, data)
-                conn.commit()
+                if data not in m:
+                    cur.execute(insertQuery, data)
+                    conn.commit()
+                    m.add(data)
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
