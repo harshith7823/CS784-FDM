@@ -49,6 +49,26 @@ class App:
             logging.error("{query} raised an error: \n {exception}".format(
                 query=query, exception=exception))
             raise
+        
+        
+    def delete_connection(self, src, dest):
+        with self.driver.session() as session:
+            result = session.write_transaction(self._delete_connection, src, dest)            
+            #print("Deleted connection ", result)
+
+    @staticmethod
+    def _delete_connection(tx, src, dest):
+        query = (
+            "MATCH (c:Person {id: $src})-[r:FOLLOWS]-(d:Person {id: $dest}) DELETE r"
+        )
+        
+        try:
+            result = tx.run(query, src=src, dest=dest)
+        except ServiceUnavailable as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+
 
 if __name__ == "__main__":
     # uri = "neo4j+s://3cc782b6.databases.neo4j.io"
