@@ -76,7 +76,7 @@ if __name__ == "__main__":
     # password = "9-2lE7ssrtt09vCiRWoV8IH2F_RyiFlV7zSIEF5eiR0"
     uri = "neo4j://localhost:7687"
     user = "neo4j"
-    password = "paraschous"
+    password = "password"
     app = App(uri, user, password)     
     #app.delete_nodes()    
     file = open('../twitter_combined.csv', 'r')
